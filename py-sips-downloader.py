@@ -24,12 +24,15 @@ def download_post_files(post_url):
       continue
     url = base_url + file_url
     print("Please wait: downloading %s -> %s" % (url, filename))
-    request.urlretrieve(url, filename=filename)
+    if os.path.isfile(filename):
+      os.remove(filename + ".download")
+    request.urlretrieve(url, filename=filename + ".download")
     print("%s: downloaded" % filename)
+    os.rename(filename + ".download",filename)
 
 
 def do_login(email, password):
-  ''' Attempts to log in using given credentials returning the response object, 
+  ''' Attempts to log in using given credentials returning the response object,
   which in case of successful login will contain the list with all the elixirsips posts '''
   login_url = base_url + "/subscriber/content"
   payload = {"username": email, "password": password }
